@@ -86,7 +86,7 @@ open class NarouFetcher {
 	public static let shared = NarouFetcher()
 	private init() {
 	}
-	private let api = "https://api.syosetu.com/novelapi/api/"
+	fileprivate static let api = "https://api.syosetu.com/novelapi/api/"
 	public enum ParameterKey: String {
 		case 出力形式 = "out"  // 出力形式をyamlまたはjsonまたはphpを指定。未指定時はYAMLになる。
 		case 出力項目指定 = "of"  // 出力する項目を個別に指定できます。未指定時は全項目出力されます。 転送量軽減のため、このパラメータの使用が推奨されます。 複数項目を出力する場合は-で区切ってください。
@@ -402,7 +402,7 @@ open class NarouFetcher {
 	public class Nコード指定: NarouQueryParameter {
 		public var name: String { ParameterKey.Nコード.rawValue }
 		public let Nコード: [String]
-		public init(Nコード: [String]) {
+		public init(_ Nコード: [String]) {
 			self.Nコード = Nコード
 		}
 		public var value: String { return Nコード.joined(separator: "-") }
@@ -413,11 +413,7 @@ open class NarouFetcher {
 		}
 		public var value: String { return "1" }
 	}
-	public func makeQueryURL(parameters: [NarouQueryParameter]) -> URL? {
-		var components = URLComponents(string: self.api)
-		components?.queryItems = parameters.map { URLQueryItem(name: $0.name, value: $0.value) }
-		return components?.url
-	}
+	/*
 	public func query(parameters: [NarouQueryParameter], completion: ((NarouQueryResponse?, Error?)->())) {
 		let 出力形式 = NarouFetcher.出力形式指定(out: .json)
 		if let url = self.makeQueryURL(parameters: parameters + [出力形式]) {
@@ -429,7 +425,7 @@ open class NarouFetcher {
 					completion(response, nil)
 				}
 				else {
-					completion(nil, NarouError.unexpectedJsonType)
+					completion(nil, NarouFetcher.NarouError.unexpectedJsonType)
 				}
 			}
 			catch {
@@ -437,7 +433,85 @@ open class NarouFetcher {
 			}
 		}
 	}
-	
+	*/
+	public func makeQuery() -> NarouQuery {
+		return NarouQuery()
+	}
+}
+
+public class NarouQuery {
+	fileprivate init() {
+	}
+	var parameters = [NarouQueryParameter]()
+	public func 検索対象範囲指定(_ 検索対象範囲: [NarouFetcher.検索対象範囲]) {
+		self.parameters += 検索対象範囲.map { NarouFetcher.検索対象範囲指定($0) }
+	}
+	public func 検索単語指定(_ keyword: String) {
+		self.parameters += [NarouFetcher.検索単語指定(keyword)]
+	}
+	public func 検索単語除外指定(_ keyword: String) {
+		self.parameters += [NarouFetcher.検索単語除外指定(keyword)]
+	}
+	public func 出力順序指定(_ 出力順序: NarouFetcher.出力順序) {
+		self.parameters += [NarouFetcher.出力順序指定(出力順序)]
+	}
+	public func 大分類指定(_ 大分類: NarouFetcher.大分類) {
+		self.parameters += [NarouFetcher.大分類指定(大分類)]
+	}
+	public func 大分類除外(_ 大分類: NarouFetcher.大分類) {
+		self.parameters += [NarouFetcher.大分類除外(大分類)]
+	}
+	public func ジャンル指定(_ ジャンル: [NarouFetcher.ジャンル]) {
+		self.parameters += [NarouFetcher.ジャンル指定(ジャンル)]
+	}
+	public func ジャンル除外(_ ジャンル: [NarouFetcher.ジャンル]) {
+		self.parameters += [NarouFetcher.ジャンル除外(ジャンル)]
+	}
+	public func ユーザID指定(_ ユーザID: [String]) {
+		self.parameters += [NarouFetcher.ユーザID指定(ユーザID)]
+	}
+	public func 登録必須キーワード指定(_ 登録必須キーワード: [NarouFetcher.登録必須キーワード指定区分]) {
+		self.parameters += 登録必須キーワード.map { NarouFetcher.登録必須キーワード指定($0)  }
+	}
+	public func 登録必須キーワード除外(_ 登録必須キーワード: [NarouFetcher.登録必須キーワード除外区分]) {
+		self.parameters += 登録必須キーワード.map { NarouFetcher.登録必須キーワード除外($0)  }
+	}
+	public func 連載停止中指定(_ 連載停止中: NarouFetcher.連載停止中区分) {
+		self.parameters += [NarouFetcher.連載停止中指定(連載停止中)]
+	}
+	public func 最終掲載日指定(_ 最終掲載日: NarouFetcher.最終掲載日種別) {
+		self.parameters += [NarouFetcher.最終掲載日指定(最終掲載日)]
+	}
+	public func Nコード指定(_ ncode: [String]) {
+		self.parameters += [NarouFetcher.Nコード指定(ncode)]
+	}
+	public func ピックアップ指定() {
+		self.parameters += [NarouFetcher.ピックアップ指定()]
+	}
+	public func makeQueryURL(parameters: [NarouQueryParameter]) -> URL? {
+		var components = URLComponents(string: NarouFetcher.api)
+		components?.queryItems = parameters.map { URLQueryItem(name: $0.name, value: $0.value) }
+		return components?.url
+	}
+	public func fetch(completion: ((NarouQueryResponse?, Error?)->())) {
+		let 出力形式 = NarouFetcher.出力形式指定(out: .json)
+		if let url = self.makeQueryURL(parameters: self.parameters + [出力形式]) {
+			print(url)
+			do {
+				let data = try Data(contentsOf: url)
+				if let json = try JSONSerialization.jsonObject(with: data, options: []) as? NSArray {
+					let response = NarouQueryResponse(array: json)
+					completion(response, nil)
+				}
+				else {
+					completion(nil, NarouFetcher.NarouError.unexpectedJsonType)
+				}
+			}
+			catch {
+				completion(nil, error)
+			}
+		}
+	}
 }
 
 public class NarouQueryResponse {

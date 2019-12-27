@@ -22,32 +22,21 @@ class NarouFetcherTests: XCTestCase {
 	
 	func testExample() {
 		let keyword = "魔王"
-
-		typealias T = NarouFetcher
-		self.fetcher.query(parameters: [
-			T.検索単語指定(keyword),
-//			T.検索対象範囲指定(.あらすじ),
-//			T.検索対象範囲指定(.タイトル),
-			T.最終掲載日指定(.先月),
-//			T.ピックアップ指定()
-		]) { (response, error) in
+		
+		let query = NarouFetcher.shared.makeQuery()
+		query.検索単語指定(keyword)
+		query.検索対象範囲指定([.あらすじ, .タイトル])
+		query.最終掲載日指定(.先月)
+		query.fetch { (response, error) in
+			if let error = error {
+				print("\(error)")
+			}
 			if let response = response {
 				for entry in response.entries {
 					print("~~~~~~~~~~")
 					print("ncode:", entry.Nコード ?? "nil")
 					print("title:", entry.タイトル ?? "nil")
-					if let あらすじ = entry.あらすじ, let range = あらすじ.range(of: keyword) {
-						print("あらすじ: ", あらすじ[range])
-					}
-					if let タイトル = entry.タイトル, let range = タイトル.range(of: keyword) {
-						print("タイトル: ", タイトル[range])
-					}
-					if let キーワード = entry.キーワード, let range = キーワード.joined().range(of: keyword) {
-						print("キーワード: ", キーワード.joined()[range])
-					}
-					if let 作者名 = entry.作者名, let range = 作者名.range(of: keyword) {
-						print("作者名: ", 作者名[range])
-					}
+					print("あらすじ:", entry.あらすじ ?? "nil")
 				}
 			}
 		}
