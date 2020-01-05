@@ -564,7 +564,7 @@ public class NarouShosetsuEntry: CustomStringConvertible {
 		case 更新日時 = "novelupdated_at" // 小説の更新日時
 		case 更新日時（システム用） = "updated_at" // 最終更新日時(注意：システム用で小説更新時とは関係ありません)
 	}
-	let dictionary: NSDictionary
+	public let dictionary: NSDictionary
 	public init(dictionary: NSDictionary) {
 		self.dictionary = dictionary
 	}
