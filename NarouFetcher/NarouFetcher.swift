@@ -197,27 +197,49 @@ open class NarouFetcher {
 		case atom  // Atomフィード
 		case jsonp  // JSONP形式
 	}
-	public enum 出力順序: String {
-		case 新着更新順 = "new"
-		case ブックマーク数の多い順 = "favnovelcnt"
-		case レビュー数の多い順 = "reviewcnt"
-		case 総合ポイントの高い順 = "hyoka"
-		case 総合ポイントの低い順 = "hyokaasc"
-		case 日間ポイントの高い順 = "dailypoint"
-		case 週間ポイントの高い順 = "weeklypoint"
-		case 月間ポイントの高い順 = "monthlypoint"
-		case 四半期ポイントの高い順 = "quarterpoint"
-		case 年間ポイントの高い順 = "yearlypoint"
-		case 感想の多い順 = "impressioncnt"
-		case 評価者数の多い順 = "hyokacnt"
-		case 評価者数の少ない順 = "hyokacntasc"
-		case 週間ユニークユーザの多い順 = "weekly"  // 毎週火曜日早朝リセット　(前週の日曜日から土曜日分)
-		case 小説本文の文字数が多い順 = "lengthdes"
-		case 小説本文の文字数が少ない順 = "lengthasc"
-		case 新着投稿順 = "ncodedesc"
-		case 更新が古い順 = "old"
+	public enum 出力順序: String, CaseIterable {
+		case 新着更新順
+		case ブックマーク数の多い順
+		case レビュー数の多い順
+		case 総合ポイントの高い順
+		case 総合ポイントの低い順
+		case 日間ポイントの高い順
+		case 週間ポイントの高い順
+		case 月間ポイントの高い順
+		case 四半期ポイントの高い順
+		case 年間ポイントの高い順
+		case 感想の多い順
+		case 評価者数の多い順
+		case 評価者数の少ない順
+		case 週間ユニークユーザの多い順  // 毎週火曜日早朝リセット　(前週の日曜日から土曜日分)
+		case 小説本文の文字数が多い順
+		case 小説本文の文字数が少ない順
+		case 新着投稿順
+		case 更新が古い順
+		public var key: String {
+			switch self {
+			case .新着更新順: return "new"
+			case .ブックマーク数の多い順: return "favnovelcnt"
+			case .レビュー数の多い順: return "reviewcnt"
+			case .総合ポイントの高い順: return "hyoka"
+			case .総合ポイントの低い順: return "hyokaasc"
+			case .日間ポイントの高い順: return "dailypoint"
+			case .週間ポイントの高い順: return "weeklypoint"
+			case .月間ポイントの高い順: return "monthlypoint"
+			case .四半期ポイントの高い順: return "quarterpoint"
+			case .年間ポイントの高い順: return "yearlypoint"
+			case .感想の多い順: return "impressioncnt"
+			case .評価者数の多い順: return "hyokacnt"
+			case .評価者数の少ない順: return "hyokacntasc"
+			case .週間ユニークユーザの多い順: return "weekly"  // 毎週火曜日早朝リセット　(前週の日曜日から土曜日分)
+			case .小説本文の文字数が多い順: return "lengthdes"
+			case .小説本文の文字数が少ない順: return "lengthasc"
+			case .新着投稿順: return "ncodedesc"
+			case .更新が古い順: return "old"
+			}
+		}
 	}
-	public enum 大分類: Int {
+	public enum 大分類: Int, CaseIterable {
 		case 恋愛 = 1
 		case ファンタジー = 2
 		case 文芸 = 3
@@ -225,7 +247,7 @@ open class NarouFetcher {
 		case その他 = 99
 		case ノンジャンル = 98
 	}
-	public enum ジャンル: Int {
+	public enum ジャンル: Int, CaseIterable {
 		case 異世界（恋愛） = 101
 		case 現実世界（恋愛） = 102
 		case ハイファンタジー = 201
@@ -325,7 +347,7 @@ open class NarouFetcher {
 		public init(_ 出力順序: 出力順序) {
 			self.出力順序 = 出力順序
 		}
-		public var value: String { return 出力順序.rawValue }
+		public var value: String { return 出力順序.key } // not rawValue
 	}
 	public class 大分類指定: NarouQueryParameter {
 		public var name: String { ParameterKey.大分類指定.rawValue }
@@ -491,7 +513,7 @@ public class NarouQuery {
 	public func makeQueryURL(parameters: [NarouQueryParameter]) -> URL? {
 		if var components = URLComponents(string: NarouFetcher.api) {
 			components.queryItems = parameters.map { URLQueryItem(name: $0.name, value: $0.value) }
-			print(components.url)
+			print(String(describing: components.url))
 			return components.url
 		}
 		return nil
