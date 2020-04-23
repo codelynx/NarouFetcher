@@ -435,6 +435,14 @@ open class NarouFetcher {
 		}
 		public var value: String { return "1" }
 	}
+	public class 最大出力数: NarouQueryParameter {
+		public var name: String { ParameterKey.最大出力数.rawValue }
+		public let count: Int
+		public init(_ count: Int) {
+			self.count = count
+		}
+		public var value: String { return String(count) }
+	}
 	/*
 	public func query(parameters: [NarouQueryParameter], completion: ((NarouQueryResponse?, Error?)->())) {
 		let 出力形式 = NarouFetcher.出力形式指定(out: .json)
@@ -509,6 +517,9 @@ public class NarouQuery {
 	}
 	public func ピックアップ指定() {
 		self.parameters += [NarouFetcher.ピックアップ指定()]
+	}
+	public func 最大出力数(_ count: Int) {
+		self.parameters += [NarouFetcher.最大出力数(count)]
 	}
 	public func makeQueryURL(parameters: [NarouQueryParameter]) -> URL? {
 		if var components = URLComponents(string: NarouFetcher.api) {
