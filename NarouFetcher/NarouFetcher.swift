@@ -58,7 +58,7 @@ public struct NarouDate: CustomStringConvertible {
 		}
 		else { return nil }
 	}
-	public var description: String {
+	public var date: Date? {
 		let calendar = Calendar(identifier: .gregorian)
 		var components = DateComponents()
 		components.year = self.year
@@ -68,7 +68,11 @@ public struct NarouDate: CustomStringConvertible {
 		components.minute = self.minute
 		components.second = self.second
 		components.calendar = calendar
-		guard let date = components.date else { fatalError() }
+		return components.date
+	}
+	public var description: String {
+		let calendar = Calendar(identifier: .gregorian)
+		guard let date = self.date else { fatalError() }
 		let formatter = DateFormatter()
 		formatter.locale = Locale(identifier: "ja_JP")
 		formatter.dateFormat = "yyyy'-'MM'-'dd HH':'mm':'ss"
@@ -551,13 +555,12 @@ public class NarouQuery {
 }
 
 public class NarouQueryResponse {
-	public var 全小説出力数: Int?
 	public var entries: [NarouShosetsuEntry]
 	fileprivate init(array: NSArray) {
 		let entries = array.compactMap { $0 as? NSDictionary }.map { NarouShosetsuEntry(dictionary: $0) }
 		self.entries = entries.filter { $0.Nコード != nil }
-		self.全小説出力数 = entries.filter({ $0.全小説出力数 != nil }).first?.全小説出力数
 	}
+	var count: Int { return self.entries.count }
 }
 
 public class NarouShosetsuEntry: CustomStringConvertible {
