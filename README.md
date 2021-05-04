@@ -1,5 +1,9 @@
 #  NarouFetcher
 
+![xcode](https://img.shields.io/badge/Xcode-11.3-blue)
+![swift](https://img.shields.io/badge/Swift-5.1-orange.svg)
+![license](https://img.shields.io/badge/License-MIT-yellow.svg)
+
 This project is for fetching light novel contents from [小説家になろう](https://syosetu.com) site. API is based on [なろうデベロッパー](https://dev.syosetu.com/man/api/) site.
 
 ### Status
