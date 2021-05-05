@@ -528,7 +528,7 @@ public class NarouQuery {
 	public func makeQueryURL(parameters: [NarouQueryParameter]) -> URL? {
 		if var components = URLComponents(string: NarouFetcher.api) {
 			components.queryItems = parameters.map { URLQueryItem(name: $0.name, value: $0.value) }
-			print(String(describing: components.url))
+			// print(String(describing: components.url))
 			return components.url
 		}
 		return nil
@@ -536,7 +536,7 @@ public class NarouQuery {
 	public func fetch(completion: ((NarouQueryResponse?, Error?)->())) {
 		let 出力形式 = NarouFetcher.出力形式指定(out: .json)
 		if let url = self.makeQueryURL(parameters: self.parameters + [出力形式]) {
-			print(url)
+			// print(url)
 			do {
 				let data = try Data(contentsOf: url)
 				if let json = try JSONSerialization.jsonObject(with: data, options: []) as? NSArray {
