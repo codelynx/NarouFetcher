@@ -5,11 +5,20 @@
 //  Created by Kaz Yoshikawa on 12/25/19.
 //
 
-import Foundation
+import UIKit
 
 extension String {
 	var stringByDecodingNonLossyASCII: String {
 		return self.cString(using: .utf8).flatMap({ String(cString: $0, encoding: .nonLossyASCII) }) ?? self
+	}
+	var decodedHTMLEntities: String {
+		guard let data = self.data(using: .utf8) else { return self }
+		let options: [NSAttributedString.DocumentReadingOptionKey: Any] = [
+			.documentType: NSAttributedString.DocumentType.html,
+			.characterEncoding: String.Encoding.utf8.rawValue
+		]
+		guard let attributedString = try? NSAttributedString(data: data, options: options, documentAttributes: nil) else { return self }
+		return attributedString.string
 	}
 }
 
@@ -608,7 +617,9 @@ public class NarouShosetsuEntry: CustomStringConvertible {
 		self.dictionary = dictionary
 	}
 	public var 全小説出力数: Int? { self.dictionary[Keys.全小説出力数.rawValue] as? Int }
-	public var タイトル: String? { self.dictionary[Keys.タイトル.rawValue] as? String }
+	public var タイトル: String? {
+		(self.dictionary[Keys.タイトル.rawValue] as? String)?.decodedHTMLEntities
+	}
 	public var Nコード: String? { self.dictionary[Keys.Nコード.rawValue] as? String }
 	public var 作者のユーザID: String? { self.dictionary[Keys.作者のユーザID.rawValue] as? String }
 	public var 作者名: String? { self.dictionary[Keys.作者名.rawValue] as? String }
