@@ -11,7 +11,6 @@
 		CC1C028323B4978500450428 /* NarouFetcher.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC6F7D3E23B3DA000002D256 /* NarouFetcher.framework */; };
 		CC6F7D4323B3DA000002D256 /* NarouFetcher.h in Headers */ = {isa = PBXBuildFile; fileRef = CC6F7D4123B3DA000002D256 /* NarouFetcher.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CC6F7D4823B3DA240002D256 /* NarouFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC6F7D4723B3DA240002D256 /* NarouFetcher.swift */; };
-		CC6F7D4A23B3E21E0002D256 /* sample.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC6F7D4923B3E21E0002D256 /* sample.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -33,7 +32,6 @@
 		CC6F7D4123B3DA000002D256 /* NarouFetcher.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NarouFetcher.h; sourceTree = "<group>"; };
 		CC6F7D4223B3DA000002D256 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CC6F7D4723B3DA240002D256 /* NarouFetcher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NarouFetcher.swift; sourceTree = "<group>"; };
-		CC6F7D4923B3E21E0002D256 /* sample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = sample.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -87,7 +85,6 @@
 			isa = PBXGroup;
 			children = (
 				CC6F7D4723B3DA240002D256 /* NarouFetcher.swift */,
-				CC6F7D4923B3E21E0002D256 /* sample.swift */,
 				CC6F7D4123B3DA000002D256 /* NarouFetcher.h */,
 				CC6F7D4223B3DA000002D256 /* Info.plist */,
 			);
@@ -212,7 +209,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				CC6F7D4823B3DA240002D256 /* NarouFetcher.swift in Sources */,
-				CC6F7D4A23B3E21E0002D256 /* sample.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -618,7 +618,8 @@ public class NarouShosetsuEntry: CustomStringConvertible {
 	}
 	public var 全小説出力数: Int? { self.dictionary[Keys.全小説出力数.rawValue] as? Int }
 	public var タイトル: String? {
-		(self.dictionary[Keys.タイトル.rawValue] as? String)?.decodedHTMLEntities
+		assert(Thread.isMainThread)
+		return (self.dictionary[Keys.タイトル.rawValue] as? String)?.decodedHTMLEntities
 	}
 	public var Nコード: String? { self.dictionary[Keys.Nコード.rawValue] as? String }
 	public var 作者のユーザID: String? { self.dictionary[Keys.作者のユーザID.rawValue] as? String }
